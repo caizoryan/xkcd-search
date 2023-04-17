@@ -30,11 +30,23 @@ function updateData(results: any) {
     }, 500);
   } else if (results.state === "ready") {
     for (const x of results()) {
-      fetchComic(x.ComicNum).then((res) => setData((prev) => [...prev, res]));
+      fetchComic(x.ComicNum).then((res) => {
+        setData((prev) => [...prev, res]);
+        getExplain(x.ComicNum, res.title);
+      });
     }
   } else {
     console.log(results);
   }
+}
+
+function getExplain(id: number, title: string) {
+  title = title.replace(" ", "_");
+  console.log(title);
+  let url = `https://www.explainxkcd.com/wiki/api.php?action=parse&page=${id}:_${title}&origin=*&format=json`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((res) => console.log(res));
 }
 
 const App: Component = () => {
