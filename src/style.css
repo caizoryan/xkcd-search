@@ -1,0 +1,22 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  width: 100vw;
+  flex-wrap: wrap;
+}
+.comic-box {
+  margin: 1.5vw;
+  width: 30vw;
+  height: 30vw;
+  overflow-y: scroll;
+  border: 1px dashed black;
+}
+
+img {
+  width: 90%;
+  margin: 5%;
+}
