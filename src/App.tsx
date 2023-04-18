@@ -14,8 +14,10 @@ async function fetchComic(id: number) {
 
 let inputBox: HTMLInputElement;
 const [prompt, setPrompt] = createSignal("Only Serifs");
+const [tempPrompt, setTempPrompt] = createSignal("");
 const [results] = createResource(prompt, fetchResults);
 const [data, setData] = createSignal<Array<any>>([]);
+const [suggestions] = createResource(tempPrompt, suggestWords);
 
 function handleSearch(prompt: string) {
   setPrompt(prompt);
@@ -49,17 +51,40 @@ function getExplain(id: number, title: string) {
     .then((res) => console.log(res));
 }
 
+async function suggestWords(prompt: string) {
+  if (prompt.length > 0)
+    return (
+      await fetch(`http://localhost:8080/suggest?q=${prompt}&autocorrect=true`)
+    ).json();
+  else return [""];
+}
+
 const App: Component = () => {
   return (
-    <div>
-      <input ref={inputBox} type="text"></input>
-      <button
-        onClick={() => {
-          handleSearch(inputBox.value);
-        }}
-      >
-        Search
-      </button>
+    <>
+      <div style="display: flex">
+        <input
+          ref={inputBox}
+          type="text"
+          onInput={(e) => setTempPrompt(e.currentTarget.value)}
+        ></input>
+        <button
+          onClick={() => {
+            handleSearch(inputBox.value);
+          }}
+        >
+          Search
+        </button>
+      </div>
+      <div>
+        <For each={suggestions()}>
+          {(word) => (
+            <button class="suggestions" onClick={() => handleSearch(word)}>
+              {word}
+            </button>
+          )}
+        </For>
+      </div>
       <div class="container">
         <For each={data()}>
           {(comic) => (
@@ -70,7 +95,7 @@ const App: Component = () => {
           )}
         </For>
       </div>
-    </div>
+    </>
   );
 };
 

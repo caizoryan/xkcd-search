@@ -16,6 +16,26 @@
   border: 1px dashed black;
 }
 
+.comic-box:hover {
+  transform: rotate(1.4deg);
+  transition: all ease-in-out 50ms;
+}
+
+.suggestions {
+  cursor: pointer;
+  all: unset;
+  border: 1px solid black;
+  padding: 5px;
+  margin: 10px 5px;
+  transition: ease-in-out all 200ms;
+}
+
+.suggestions:hover {
+  cursor: pointer;
+  background: black;
+  color: white;
+}
+
 img {
   width: 90%;
   margin: 5%;
