@@ -13,7 +13,7 @@ async function fetchComic(id: number) {
 }
 
 let inputBox: HTMLInputElement;
-const [prompt, setPrompt] = createSignal("");
+const [prompt, setPrompt] = createSignal("Only Serifs");
 const [results] = createResource(prompt, fetchResults);
 const [data, setData] = createSignal<Array<any>>([]);
 
