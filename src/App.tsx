@@ -2,19 +2,21 @@ import { createResource, Component, createSignal, For } from "solid-js";
 
 import "./style.css";
 
+// results from search
 async function fetchResults(prompt: string) {
   return (
     await fetch(`http://localhost:8080/search?q=${prompt}&autocorrect=true`)
   ).json();
 }
 
+// comic data
 async function fetchComic(id: number) {
   return (await fetch(`https://getxkcd.vercel.app/api/comic?num=${id}`)).json();
 }
 
 let inputBox: HTMLInputElement;
-const [prompt, setPrompt] = createSignal("Only Serifs");
-const [tempPrompt, setTempPrompt] = createSignal("");
+const [prompt, setPrompt] = createSignal(""); // upon pressing search
+const [tempPrompt, setTempPrompt] = createSignal(""); // suggestions as you type
 const [results] = createResource(prompt, fetchResults);
 const [data, setData] = createSignal<Array<any>>([]);
 const [suggestions] = createResource(tempPrompt, suggestWords);
@@ -29,7 +31,7 @@ function updateData(results: any) {
   if (results.loading) {
     setTimeout(() => {
       updateData(results);
-    }, 500);
+    }, 100);
   } else if (results.state === "ready") {
     for (const x of results()) {
       fetchComic(x.ComicNum).then((res) => {
@@ -86,14 +88,32 @@ const App: Component = () => {
         </For>
       </div>
       <div class="container">
-        <For each={data()}>
-          {(comic) => (
-            <div class="comic-box">
-              <p>{comic.title}</p>
-              <img src={comic.img}></img>
-            </div>
-          )}
-        </For>
+        <div class="semi-container">
+          <For each={data()}>
+            {(comic, i) => {
+              if (i() % 2 === 0)
+                return (
+                  <div class="comic-box">
+                    <p>{comic.title}</p>
+                    <img src={comic.img}></img>
+                  </div>
+                );
+            }}
+          </For>
+        </div>
+        <div class="semi-container">
+          <For each={data()}>
+            {(comic, i) => {
+              if (Math.abs(i() % 2) === 1)
+                return (
+                  <div class="comic-box">
+                    <p>{comic.title}</p>
+                    <img src={comic.img}></img>
+                  </div>
+                );
+            }}
+          </For>
+        </div>
       </div>
     </>
   );
