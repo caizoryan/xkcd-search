@@ -2,6 +2,23 @@ import { createResource, Component, createSignal, For } from "solid-js";
 
 import "./style.css";
 
+const Comic: Component<{
+  img: string;
+  num: number;
+  title: string;
+  alt: string;
+}> = (props) => {
+  return (
+    <a href={"https://xkcd.com/" + props.num}>
+      <div class="comic-box">
+        <p class="comic-title">{props.title}</p>
+        <img src={props.img}></img>
+        <p style="margin: 0 2.5vw 1vw 2.5vw;">{props.alt}</p>
+      </div>
+    </a>
+  );
+};
+
 // results from search
 async function fetchResults(prompt: string) {
   return (
@@ -97,13 +114,12 @@ const App: Component = () => {
               console.log(comic);
               if (i() % 2 === 0)
                 return (
-                  <a href={"https://xkcd.com/" + comic.num}>
-                    <div class="comic-box">
-                      <p class="comic-title">{comic.title}</p>
-                      <img src={comic.img}></img>
-                      <p style="margin: 0 2.5vw 1vw 2.5vw;">{comic.alt}</p>
-                    </div>
-                  </a>
+                  <Comic
+                    num={comic.num}
+                    title={comic.title}
+                    img={comic.img}
+                    alt={comic.alt}
+                  ></Comic>
                 );
             }}
           </For>
@@ -113,13 +129,12 @@ const App: Component = () => {
             {(comic, i) => {
               if (Math.abs(i() % 2) === 1)
                 return (
-                  <a href={"https://xkcd.com/" + comic.num}>
-                    <div class="comic-box">
-                      <p class="comic-title">{comic.title}</p>
-                      <img src={comic.img}></img>
-                      <p style="margin: 0 2.5vw 1vw 2.5vw;">{comic.alt}</p>
-                    </div>
-                  </a>
+                  <Comic
+                    num={comic.num}
+                    title={comic.title}
+                    img={comic.img}
+                    alt={comic.alt}
+                  ></Comic>
                 );
             }}
           </For>
