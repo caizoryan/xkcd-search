@@ -78,7 +78,7 @@ const App: Component = () => {
           Search
         </button>
       </div>
-      <div style="margin: -1vw 2.5vw">
+      <div style="margin: 0 2.5vw">
         <For each={suggestions()}>
           {(word) => {
             if (word != "")
@@ -94,12 +94,16 @@ const App: Component = () => {
         <div class="semi-container">
           <For each={data()}>
             {(comic, i) => {
+              console.log(comic);
               if (i() % 2 === 0)
                 return (
-                  <div class="comic-box">
-                    <p>{comic.title}</p>
-                    <img src={comic.img}></img>
-                  </div>
+                  <a href={"https://xkcd.com/" + comic.num}>
+                    <div class="comic-box">
+                      <p class="comic-title">{comic.title}</p>
+                      <img src={comic.img}></img>
+                      <p style="margin: 0 2.5vw 1vw 2.5vw;">{comic.alt}</p>
+                    </div>
+                  </a>
                 );
             }}
           </For>
@@ -109,10 +113,13 @@ const App: Component = () => {
             {(comic, i) => {
               if (Math.abs(i() % 2) === 1)
                 return (
-                  <div class="comic-box">
-                    <p>{comic.title}</p>
-                    <img src={comic.img}></img>
-                  </div>
+                  <a href={"https://xkcd.com/" + comic.num}>
+                    <div class="comic-box">
+                      <p class="comic-title">{comic.title}</p>
+                      <img src={comic.img}></img>
+                      <p style="margin: 0 2.5vw 1vw 2.5vw;">{comic.alt}</p>
+                    </div>
+                  </a>
                 );
             }}
           </For>

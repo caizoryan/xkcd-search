@@ -5,6 +5,10 @@
   font-family: "Roboto Mono", monospace;
 }
 
+a {
+  all: unset;
+}
+
 input {
   all: unset;
   border: 2px solid black;
@@ -22,6 +26,13 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: ease-in-out all 200ms;
+}
+
+button:hover {
+  cursor: pointer;
+  background: black;
+  color: white;
 }
 
 .container {
@@ -38,12 +49,22 @@ button {
   width: 45vw;
   max-height: 60vh;
   overflow-y: scroll;
-  border: 1px dashed black;
+  background: rgb(240, 240, 240);
+  box-shadow: 5px 5px 24px -2px rgba(0, 0, 0, 0.05);
 }
 
 .comic-box:hover {
-  transform: rotate(1.4deg);
+  transform: rotate(1.4deg) scale(1.02);
   transition: all ease-in-out 50ms;
+  cursor: pointer;
+  box-shadow: 5px 5px 24px -2px rgba(0, 0, 0, 0.3);
+}
+
+.comic-title {
+  margin: 2% 5%;
+  background: black;
+  color: white;
+  padding: 5px;
 }
 
 .suggestions {
