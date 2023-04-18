@@ -1,4 +1,10 @@
-import { createResource, Component, createSignal, For } from "solid-js";
+import {
+  createResource,
+  Component,
+  createSignal,
+  For,
+  createEffect,
+} from "solid-js";
 
 import "./style.css";
 
@@ -50,24 +56,28 @@ function updateData(results: any) {
       updateData(results);
     }, 100);
   } else if (results.state === "ready") {
-    for (const x of results()) {
-      fetchComic(x.ComicNum).then((res) => {
-        setData((prev) => [...prev, res]);
-        getExplain(x.ComicNum, res.title);
-      });
+    for (let i = 0; i < results().length; i++) {
+      let x = results()[i];
+      fetchComic(x.ComicNum)
+        .then((res) => {
+          res.rank = i;
+          setData((prev) => [...prev, res]);
+          getExplain(x.ComicNum, res.title);
+        })
+        .then(() => {
+          setData(data().sort((a, b) => a.rank - b.rank));
+          console.log(data());
+        });
     }
   } else {
-    console.log(results);
+    console.log(results());
   }
 }
 
 function getExplain(id: number, title: string) {
   title = title.replace(" ", "_");
-  console.log(title);
   let url = `https://www.explainxkcd.com/wiki/api.php?action=parse&page=${id}:_${title}&origin=*&format=json`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((res) => console.log(res));
+  fetch(url).then((res) => res.json());
 }
 
 async function suggestWords(prompt: string) {
@@ -108,37 +118,18 @@ const App: Component = () => {
         </For>
       </div>
       <div class="container">
-        <div class="semi-container">
-          <For each={data()}>
-            {(comic, i) => {
-              console.log(comic);
-              if (i() % 2 === 0)
-                return (
-                  <Comic
-                    num={comic.num}
-                    title={comic.title}
-                    img={comic.img}
-                    alt={comic.alt}
-                  ></Comic>
-                );
-            }}
-          </For>
-        </div>
-        <div class="semi-container">
-          <For each={data()}>
-            {(comic, i) => {
-              if (Math.abs(i() % 2) === 1)
-                return (
-                  <Comic
-                    num={comic.num}
-                    title={comic.title}
-                    img={comic.img}
-                    alt={comic.alt}
-                  ></Comic>
-                );
-            }}
-          </For>
-        </div>
+        <For each={data()}>
+          {(comic) => {
+            return (
+              <Comic
+                num={comic.num}
+                title={comic.rank + 1 + ". " + comic.title}
+                img={comic.img}
+                alt={comic.alt}
+              ></Comic>
+            );
+          }}
+        </For>
       </div>
     </>
   );
