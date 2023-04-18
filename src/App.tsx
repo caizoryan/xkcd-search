@@ -64,7 +64,7 @@ async function suggestWords(prompt: string) {
 const App: Component = () => {
   return (
     <>
-      <div style="display: flex">
+      <div style="display: flex; margin-top: auto">
         <input
           ref={inputBox}
           type="text"
@@ -78,13 +78,16 @@ const App: Component = () => {
           Search
         </button>
       </div>
-      <div>
+      <div style="margin: -1vw 2.5vw">
         <For each={suggestions()}>
-          {(word) => (
-            <button class="suggestions" onClick={() => handleSearch(word)}>
-              {word}
-            </button>
-          )}
+          {(word) => {
+            if (word != "")
+              return (
+                <p class="suggestions" onClick={() => handleSearch(word)}>
+                  {word}
+                </p>
+              );
+          }}
         </For>
       </div>
       <div class="container">
