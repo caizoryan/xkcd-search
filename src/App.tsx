@@ -27,9 +27,19 @@ const Comic: Component<{
 
 // results from search
 async function fetchResults(prompt: string) {
-  return (
-    await fetch(`http://localhost:8080/search?q=${prompt}&autocorrect=true`)
-  ).json();
+  return await fetch(
+    `http://localhost:8080/search?q=${prompt}&autocorrect=true`
+  )
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.rankings) {
+        return res.rankings;
+      } else if (typeof res != "string") {
+        return res;
+      } else {
+        return [{ ComicNum: 1969 }];
+      }
+    });
 }
 
 // comic data
@@ -51,22 +61,24 @@ function handleSearch(prompt: string) {
 }
 
 function updateData(results: any) {
+  const swap = [];
   if (results.loading) {
     setTimeout(() => {
       updateData(results);
     }, 100);
   } else if (results.state === "ready") {
+    console.log(results());
     for (let i = 0; i < results().length; i++) {
       let x = results()[i];
       fetchComic(x.ComicNum)
         .then((res) => {
           res.rank = i;
-          setData((prev) => [...prev, res]);
-          getExplain(x.ComicNum, res.title);
+          swap.push(res);
         })
         .then(() => {
-          setData(data().sort((a, b) => a.rank - b.rank));
-          console.log(data());
+          if (swap.length === results().length) {
+            setData(swap.sort((a, b) => a.rank - b.rank));
+          }
         });
     }
   } else {
